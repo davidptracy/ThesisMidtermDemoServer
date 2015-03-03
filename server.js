@@ -130,10 +130,10 @@ function setBrightness(value){
 
 }
 
-function setHsl(value){
+function setHsl(){
   api.setLightState(2, state.on().hsl(hsl[0], hsl[1], hsl[2]), function(err, lights) {
         if (err) throw err;
-        displayResult(lights);
+        // displayResult(lights);
     });
 
 }
