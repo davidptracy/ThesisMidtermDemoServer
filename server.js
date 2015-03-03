@@ -41,6 +41,8 @@ var gyroVals = [0,0,0];
 
 var brightness = 100;
 
+var hsl = [360,0,100];
+
 var io = require('socket.io').listen(httpServer);
 
 var connectedSockets = [];
@@ -68,6 +70,11 @@ io.sockets.on('connection', function (socket){
 		socket.broadcast.emit('inputVals', gyroVals);
 
 		brightness = map_range(beta, -90, 90, 30, 100);
+		hue = map_range(gamma, -180, 180, 0, 359);
+
+		hsl[0] = hue;
+		hsl[1] = 100;
+		hsl[2] = brightness;
 
 	});
 
@@ -79,6 +86,12 @@ io.sockets.on('connection', function (socket){
 
 function adjustBrightness(){
   setBrightness(brightness);
+}
+
+setInterval(adjustBrightness, 250);
+
+function adjustHsl(){
+  setHsl(hsl);
 }
 
 setInterval(adjustBrightness, 250);
@@ -111,6 +124,14 @@ function setColor(color){
 
 function setBrightness(value){
   api.setLightState(2, state.on().brightness(value), function(err, lights) {
+        if (err) throw err;
+        // displayResult(lights);
+    });
+
+}
+
+function setHsl(value){
+  api.setLightState(2, state.on().hsl(value), function(err, lights) {
         if (err) throw err;
         displayResult(lights);
     });
