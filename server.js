@@ -63,9 +63,7 @@ io.sockets.on('connection', function (socket){
 
 		console.log("Received gyroVals from client: " + gyroVals);
 		
-		socket.broadcast.emit('inputVals'){
-
-		}
+		socket.broadcast.emit('inputVals', gyroVals);
 
 	});
 
