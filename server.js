@@ -91,7 +91,7 @@ function adjustBrightness(){
 // setInterval(adjustBrightness, 250);
 
 function adjustHsl(){
-  setHsl(hsl);
+  setHsl();
 }
 
 setInterval(adjustHsl, 250);
@@ -131,7 +131,7 @@ function setBrightness(value){
 }
 
 function setHsl(value){
-  api.setLightState(2, state.on().hsl(value), function(err, lights) {
+  api.setLightState(2, state.on().hsl(hsl[0], hsl[1], hsl[2]), function(err, lights) {
         if (err) throw err;
         displayResult(lights);
     });
