@@ -39,6 +39,8 @@ function requestHandler(req, res) {
 
 var gyroVals = [0,0,0];
 
+var brightness = 100;
+
 var io = require('socket.io').listen(httpServer);
 
 var connectedSockets = [];
@@ -65,6 +67,8 @@ io.sockets.on('connection', function (socket){
 		
 		socket.broadcast.emit('inputVals', gyroVals);
 
+		brightness = map_range(beta, -90, 90, 30, 100);
+
 	});
 
 	socket.on('disconnect', function(){
@@ -73,3 +77,51 @@ io.sockets.on('connection', function (socket){
 
 });
 
+function adjustBrightness(){
+  setBrightness(brightness);
+}
+
+setInterval(adjustBrightness, 250);
+
+
+//===========================================================
+//======================== HUE-API ==========================
+//===========================================================
+
+var hue = require("node-hue-api"),
+    HueApi = hue.HueApi,
+    lightState = hue.lightState;
+
+var displayResult = function(result) {
+    console.log(JSON.stringify(result, null, 2));
+};
+
+var host = '128.122.151.166',
+    username = 'davidptracy',
+    api = new HueApi(host, username),
+    state = lightState.create();
+
+function setColor(color){
+    console.log(color);
+    api.setLightState(2, state.on().rgb(color), function(err, lights) {
+        if (err) throw err;
+        displayResult(lights);
+    });
+}
+
+function setBrightness(value){
+  api.setLightState(2, state.on().brightness(value), function(err, lights) {
+        if (err) throw err;
+        displayResult(lights);
+    });
+
+}
+
+
+//===========================================================
+//===================== GLOBAL METHODS ======================
+//===========================================================
+
+function map_range(value, low1, high1, low2, high2) {
+    return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
+}
