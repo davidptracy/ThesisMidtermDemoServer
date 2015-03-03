@@ -94,7 +94,7 @@ function adjustHsl(){
   setHsl(hsl);
 }
 
-setInterval(adjustBrightness, 250);
+setInterval(adjustHsl, 250);
 
 
 //===========================================================
